@@ -4,7 +4,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -33,7 +32,18 @@ public class FieldOrientedMecanumDrive extends LinearOpMode {
         // Reverse left side motors so positive power pushes the robot forward
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        //frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        // Set motors to BRAKE on zero power for crisp stopping and precise control
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Enable closed-loop velocity control using motor encoders
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Retrieve the IMU from hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
@@ -89,11 +99,11 @@ public class FieldOrientedMecanumDrive extends LinearOpMode {
             backRightMotor.setPower(backRightPower);
 
             // Telemetry updates
-            telemetry.addData("Heading (Deg)", Math.toDegrees(botHeading));
-            telemetry.addData("FL Power", "%.2f", frontLeftPower);
-            telemetry.addData("BL Power", "%.2f", backLeftPower);
-            telemetry.addData("FR Power", "%.2f", frontRightPower);
-            telemetry.addData("BR Power", "%.2f", backRightPower);
+            telemetry.addData("Heading (Deg)", "%.1f°", Math.toDegrees(botHeading));
+            telemetry.addData("FL (m3)", "Power: %.2f | Encoders: %d ticks", frontLeftPower, frontLeftMotor.getCurrentPosition());
+            telemetry.addData("BL (m0)", "Power: %.2f | Encoders: %d ticks", backLeftPower, backLeftMotor.getCurrentPosition());
+            telemetry.addData("FR (m2)", "Power: %.2f | Encoders: %d ticks", frontRightPower, frontRightMotor.getCurrentPosition());
+            telemetry.addData("BR (m1)", "Power: %.2f | Encoders: %d ticks", backRightPower, backRightMotor.getCurrentPosition());
             telemetry.update();
         }
     }
