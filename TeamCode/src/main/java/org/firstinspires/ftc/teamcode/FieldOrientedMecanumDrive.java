@@ -33,7 +33,7 @@ public class FieldOrientedMecanumDrive extends LinearOpMode {
         // Reverse left side motors so positive power pushes the robot forward
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        //frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         // Retrieve the IMU from hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
 
